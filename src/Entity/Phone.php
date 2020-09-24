@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PhoneRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PhoneRepository::class)
@@ -22,12 +23,16 @@ class Phone
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"list", "show"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min="2", max="255")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"list", "show"})
+     * @Assert\NotBlank()
+     * @Assert\Range(min="0", max="1500")
      */
     private $price;
 
