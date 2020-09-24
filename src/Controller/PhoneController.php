@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Phone;
 use App\Repository\PhoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +64,7 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phones", name="add_phone", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
 
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
@@ -86,6 +88,7 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phones/{id}", name="update_phone", methods={"PUT"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, SerializerInterface $serializer, Phone $phone, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -115,6 +118,7 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phones/{id}", name="delete_phone", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Phone $phone, EntityManagerInterface $entityManager)
     {
