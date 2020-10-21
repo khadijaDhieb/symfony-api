@@ -40,6 +40,7 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phones/{page<\d+>?1}", name="list_phone", methods={"GET"})
+     * IsGranted("ROLE_ADMIN")
      */
     public function index(Request $request, PhoneRepository $phoneRepository, SerializerInterface $serializer)
     {
@@ -49,7 +50,7 @@ class PhoneController extends AbstractController
         if (is_null($page) || $page < 1) {
             $page = 1;
         }
-        $limit = 10;
+        $limit = 20;
 
         $phones = $phoneRepository->findAllPhones($page, $limit);
         $data = $serializer->serialize($phones, 'json', [
@@ -64,31 +65,39 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phones", name="add_phone", methods={"POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * IsGranted("ROLE_USER")
      */
 
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {
         $phone = $serializer->deserialize($request->getContent(), Phone::class, 'json');
         $errors = $validator->validate($phone);
+        
         if(count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
             return new Response($errors, 500, [
                 'Content-Type' => 'application/json'
             ]);
         }
+    
         $entityManager->persist($phone);
         $entityManager->flush();
         $data = [
             'status' => 201,
-            'message' => 'Le téléphone a bien été ajouté'
+            'message' => 'Le téléphone a bien été ajouté',
+            'phone' => [
+                'id' => $phone->getId(),
+                'name' => $phone->getName(),
+                'price' => $phone->getPrice(),
+            ],
         ];
+
         return new JsonResponse($data, 201);
     }
 
     /**
      * @Route("/phones/{id}", name="update_phone", methods={"PUT"})
-     * @IsGranted("ROLE_ADMIN")
+     * IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, SerializerInterface $serializer, Phone $phone, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -111,14 +120,19 @@ class PhoneController extends AbstractController
         $entityManager->flush();
         $data = [
             'status' => 200,
-            'message' => 'Le téléphone a bien été mis à jour'
+            'message' => 'Le téléphone a bien été mis à jour',
+            'phone' => [
+                'id' => $phone->getId(),
+                'name' => $phone->getName(),
+                'price' => $phone->getPrice(),
+            ],
         ];
         return new JsonResponse($data);
     }
 
     /**
      * @Route("/phones/{id}", name="delete_phone", methods={"DELETE"})
-     * @IsGranted("ROLE_ADMIN")
+     * IsGranted("ROLE_ADMIN")
      */
     public function delete(Phone $phone, EntityManagerInterface $entityManager)
     {
