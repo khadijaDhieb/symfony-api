@@ -48,6 +48,34 @@ class Phone
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"list", "show"})
+     */
+    private $created_date;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"list", "show"})
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="text", length=255, nullable=true)
+     * @Groups({"list", "show"})
+     */
+    private $image_url;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"list", "show"})
+     */
+    private $phone_number;
+
+
+   
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,6 +125,55 @@ class Phone
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCreatedDate(): ?\DateTimeInterface
+    {
+        return $this->created_date;
+    }
+
+    public function setCreatedDate(?string $created_date): self
+    {
+        $created_date = \DateTime::createFromFormat('Ymd', '20170101');
+        $this->created_date = $created_date;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->image_url;
+    }
+
+    public function setImageUrl(?string $image_url): self
+    {
+        $this->image_url = $image_url;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phone_number;
+    }
+
+    public function setPhoneNumber(?string $phone_number): self
+    {
+        $this->phone_number = $phone_number;
 
         return $this;
     }

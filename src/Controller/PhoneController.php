@@ -50,12 +50,12 @@ class PhoneController extends AbstractController
         if (is_null($page) || $page < 1) {
             $page = 1;
         }
-        $limit = 20;
+        $limit = 10;
 
         $phones = $phoneRepository->findAllPhones($page, $limit);
-        $data = $serializer->serialize($phones, 'json', [
-            'groups' => ['list']
-        ]);
+        $data = $serializer->serialize($phones, 'json' 
+        //, ['groups' => ['list']] : supprimer pour faire l'affichage de champs email, ... 
+                                );
 
 
         return new Response($data, 200, [
@@ -89,6 +89,10 @@ class PhoneController extends AbstractController
                 'id' => $phone->getId(),
                 'name' => $phone->getName(),
                 'price' => $phone->getPrice(),
+                'createdDate'=>$phone->getCreatedDate()->format('Y-m-d H:i:s'),
+                'email'=>$phone->getEmail(),
+                'imageUrl'=>$phone->getImageUrl(),
+                'phoneNumber'=>$phone->getPhoneNumber(),
             ],
         ];
 
@@ -125,6 +129,10 @@ class PhoneController extends AbstractController
                 'id' => $phone->getId(),
                 'name' => $phone->getName(),
                 'price' => $phone->getPrice(),
+                'createdDate'=>$phone->getCreatedDate()->format('Y-m-d H:i:s'),
+                'email'=>$phone->getEmail(),
+                'imageUrl'=>$phone->getImageUrl(),
+                'phoneNumber'=>$phone->getPhoneNumber(),
             ],
         ];
         return new JsonResponse($data);
